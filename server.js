@@ -1,27 +1,15 @@
 // server.js
 const express = require('express');
-const cors = require('cors');
-const mongoose = require('mongoose');
-const blogRoutes = require('./routes/blogs');
-
 const app = express();
+const cors = require('cors');
+const blogRoutes = require('./routes/blogs');
+const db = require('./db/db');
+
+db();
 app.use(cors());
 app.use(express.json());
+app.use(blogRoutes);
 
-// Connect to MongoDB
-mongoose.connect('mongodb://localhost/mern-crud-app', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
+app.listen(5000, () => {
+  console.log('Server has started')
 })
-  .then(() => {
-    console.log('Connected to MongoDB');
-    app.listen(5000, () => {
-      console.log('Server started on port 5000');
-    });
-  })
-  .catch(error => {
-    console.error('Error connecting to MongoDB:', error);
-  });
-
-// API routes
-app.use('/blogs', blogRoutes);

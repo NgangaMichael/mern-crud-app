@@ -3,18 +3,6 @@ const express = require('express');
 const router = express.Router();
 const Blog = require('../models/blog');
 
-// Create a new blog
-router.post('/', async (req, res) => {
-  try {
-    const newBlog = req.body;
-    const createdBlog = await Blog.create(newBlog);
-    res.status(201).json(createdBlog);
-  } catch (error) {
-    console.error('Error creating blog:', error);
-    res.status(500).send('Internal Server Error');
-  }
-});
-
 // Read all blogs
 router.get('/', async (req, res) => {
   try {
@@ -26,8 +14,20 @@ router.get('/', async (req, res) => {
   }
 });
 
+// Create a new blog
+router.post('/create', async (req, res) => {
+  try {
+    const newBlog = req.body;
+    const createdBlog = await Blog.create(newBlog);
+    res.status(201).json(createdBlog);
+  } catch (error) {
+    console.error('Error creating blog:', error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
 // Read a single blog
-router.get('/:id', async (req, res) => {
+router.get('/details/:id', async (req, res) => {
   try {
     const blog = await Blog.findById(req.params.id);
     if (!blog) {
@@ -41,7 +41,7 @@ router.get('/:id', async (req, res) => {
 });
 
 // Update a blog
-router.put('/:id', async (req, res) => {
+router.put('/editblog/:id', async (req, res) => {
   try {
     const updatedBlog = await Blog.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
@@ -58,7 +58,7 @@ router.put('/:id', async (req, res) => {
 });
 
 // Delete a blog
-router.delete('/:id', async (req, res) => {
+router.delete('/delete/:id', async (req, res) => {
   try {
     const deletedBlog = await Blog.findByIdAndDelete(req.params.id);
     if (!deletedBlog) {
